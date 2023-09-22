@@ -27,10 +27,11 @@ export const RealtimeLogsPreviewer = ({
 }: RealtimeLogsPreviewerProps) => {
   const [realtimeConfig, setRealtimeConfig] = useState<UseRealtimeLogsPreviewParams>({
     enabled: false,
-    projectRef: '',
+    projectRef: 'pxidrgkatumlvfqaxcll',
     channelName: 'room_a',
     logLevel: 'info',
-    token: '',
+    token:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4aWRyZ2thdHVtbHZmcWF4Y2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg5OTUzOTgsImV4cCI6MTk4NDU3MTM5OH0.d_yYtASLzAoIIGdXUBIgRAGLBnNow7JG2SoaNMQ8ySg',
     schema: 'public',
     table: '*',
     filter: undefined,
