@@ -6,7 +6,7 @@ import { FormActions, FormPanel, FormSectionContent } from 'components/ui/Forms'
 import { useSchemasQuery } from 'data/database/schemas-query'
 import { useSelectedProject, useStore } from 'hooks'
 import { EXCLUDED_SCHEMAS } from 'lib/constants/schemas'
-import { Form, Input, Listbox, Modal, Toggle } from 'ui'
+import { Form, Input, Listbox, Modal } from 'ui'
 import { UseRealtimeLogsPreviewParams } from './useRealtimeLogsPreviewer'
 
 const RealtimeConfigModal = ({
@@ -98,30 +98,6 @@ const RealtimeConfigModal = ({
                 }
               >
                 <div className="p-8">
-                  <FormSectionContent loading={false} fullWidth>
-                    <Toggle
-                      name="ENABLE_BROADCAST"
-                      size="small"
-                      label="Enable broadcast"
-                      layout="flex"
-                      descriptionText="Broadcast is always enabled when successfully connected to a Channel"
-                    />
-                    <Toggle
-                      name="ENABLE_PRESENCE"
-                      size="small"
-                      label="Enable presence"
-                      layout="flex"
-                      descriptionText="Enable Presence on this Channel"
-                    />
-                    <Toggle
-                      name="ENABLE_DB_CHANGES"
-                      size="small"
-                      label="Enable database changes"
-                      layout="flex"
-                      descriptionText="Enable Database Changes on this Channel"
-                    />
-                  </FormSectionContent>
-
                   <FormSectionContent loading={false}>
                     <Input
                       name="PROJECT_REF"

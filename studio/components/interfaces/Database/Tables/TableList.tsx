@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useProjectContext } from 'components/layouts/ProjectLayout/ProjectContext'
 import NoSearchResults from 'components/to-be-cleaned/NoSearchResults'
 import Table from 'components/to-be-cleaned/Table'
+import AlertError from 'components/ui/AlertError'
 import { GenericSkeletonLoader } from 'components/ui/ShimmeringLoader'
 import { useSchemasQuery } from 'data/database/schemas-query'
 import { useTablesQuery } from 'data/tables/tables-query'
@@ -25,7 +26,6 @@ import {
   Input,
   Listbox,
 } from 'ui'
-import AlertError from 'components/ui/AlertError'
 
 interface TableListProps {
   onAddTable: () => void
@@ -90,8 +90,8 @@ const TableList = ({
         <h3 className="mb-1 text-xl text-scale-1200">Database Tables</h3>
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="">
+        <div className="">
           <div className="w-[260px]">
             <Listbox
               size="small"
