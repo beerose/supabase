@@ -12,6 +12,7 @@ import {
 } from 'ui'
 import RealtimeConfigModal from './RealtimeConfigModal'
 import { SchemasListbox } from './SchemasListBox'
+import { TablesListbox } from './TablesListbox'
 import { UseRealtimeLogsPreviewParams } from './useRealtimeLogsPreviewer'
 
 interface PreviewFilterPanelProps {
@@ -39,38 +40,52 @@ const PreviewFilterPanel = ({ condensedLayout, config, onSetConfig }: PreviewFil
             onCheckedChange={() => onSetConfig({ ...config, enabled: !config.enabled })}
           />
           <Label htmlFor="realtime-enabled">Realtime</Label>
-          <Switch
-            id="broadcast_enabled"
-            disabled={!config.enabled}
-            checked={config.enableBroadcast}
-            onCheckedChange={() =>
-              onSetConfig({ ...config, enableBroadcast: !config.enableBroadcast })
-            }
-          />
-          <Label htmlFor="broadcast_enabled">Enable broadcast</Label>
-          <Switch
-            id="presence_enabled"
-            disabled={!config.enabled}
-            checked={config.enablePresence}
-            onCheckedChange={() =>
-              onSetConfig({ ...config, enablePresence: !config.enablePresence })
-            }
-          />
-          <Label htmlFor="presence_enabled">Enable presence</Label>
-          <Switch
-            id="db_changes_enabled"
-            disabled={!config.enabled}
-            checked={config.enableDbChanges}
-            onCheckedChange={() =>
-              onSetConfig({ ...config, enableDbChanges: !config.enableDbChanges })
-            }
-          />
-          <Label htmlFor="db_changes_enabled">Enable database changes</Label>
-          <SchemasListbox
-            value={config.schema}
-            onChange={(v) => onSetConfig({ ...config, schema: v })}
-            isLocked={false}
-          />
+          {config.enabled && (
+            <>
+              <Switch
+                id="broadcast_enabled"
+                disabled={!config.enabled}
+                checked={config.enableBroadcast}
+                onCheckedChange={() =>
+                  onSetConfig({ ...config, enableBroadcast: !config.enableBroadcast })
+                }
+              />
+              <Label htmlFor="broadcast_enabled">Enable broadcast</Label>
+              <Switch
+                id="presence_enabled"
+                disabled={!config.enabled}
+                checked={config.enablePresence}
+                onCheckedChange={() =>
+                  onSetConfig({ ...config, enablePresence: !config.enablePresence })
+                }
+              />
+              <Label htmlFor="presence_enabled">Enable presence</Label>
+              <Switch
+                id="db_changes_enabled"
+                disabled={!config.enabled}
+                checked={config.enableDbChanges}
+                onCheckedChange={() =>
+                  onSetConfig({ ...config, enableDbChanges: !config.enableDbChanges })
+                }
+              />
+              <Label htmlFor="db_changes_enabled">Enable database changes</Label>
+              {config.enableDbChanges && (
+                <>
+                  <SchemasListbox
+                    value={config.schema}
+                    onChange={(v) => onSetConfig({ ...config, schema: v })}
+                    isLocked={false}
+                  />
+                  <TablesListbox
+                    selectedSchemaName={config.schema}
+                    value={''}
+                    onChange={() => {}}
+                    isLocked={false}
+                  />
+                </>
+              )}
+            </>
+          )}
           <Button onClick={() => setModalShown(true)}>Set config</Button>
         </div>
         <Popover_Shadcn_ open={open} onOpenChange={setOpen}>

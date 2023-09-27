@@ -1,12 +1,11 @@
 import { partition } from 'lodash'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
-import { FormLayout } from '@ui/lib/Layout/FormLayout'
 import { FormActions, FormPanel, FormSectionContent } from 'components/ui/Forms'
 import { useSchemasQuery } from 'data/database/schemas-query'
 import { useSelectedProject, useStore } from 'hooks'
 import { EXCLUDED_SCHEMAS } from 'lib/constants/schemas'
-import { Form, Input, Listbox, Modal } from 'ui'
+import { Form, Input, Modal } from 'ui'
 import { UseRealtimeLogsPreviewParams } from './useRealtimeLogsPreviewer'
 
 const RealtimeConfigModal = ({
@@ -123,7 +122,7 @@ const RealtimeConfigModal = ({
                   </FormSectionContent>
 
                   <FormSectionContent loading={false}>
-                    <FormLayout descriptionText="Listen to changes from tables in this schema">
+                    {/* <FormLayout descriptionText="Listen to changes from tables in this schema">
                       <Listbox size="small" value={selectedSchema} onChange={setSelectedSchema}>
                         <Listbox.Option
                           disabled
@@ -133,7 +132,6 @@ const RealtimeConfigModal = ({
                         >
                           <p className="text-sm">Schemas</p>
                         </Listbox.Option>
-                        {/* @ts-ignore */}
                         {openSchemas.map((schema) => (
                           <Listbox.Option
                             key={schema.id}
@@ -163,7 +161,7 @@ const RealtimeConfigModal = ({
                           </Listbox.Option>
                         ))}
                       </Listbox>
-                    </FormLayout>
+                    </FormLayout> */}
                     <Input
                       name="TABLE"
                       id="TABLE"
