@@ -27,6 +27,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
+import LogRocket from 'logrocket'
 import Head from 'next/head'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -54,12 +55,21 @@ import { useAppStateSnapshot } from 'state/app-state'
 import { RootStore } from 'stores'
 import HCaptchaLoadedStore from 'stores/hcaptcha-loaded-store'
 import { AppPropsWithLayout } from 'types'
+import {
+  FeaturePreviewContextProvider,
+  FeaturePreviewModal,
+} from 'components/interfaces/App/FeaturePreview'
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(relativeTime)
 dart(Prism)
+
+if (IS_PLATFORM && process.env.NEXT_PUBLIC_ENVIRONMENT === 'staging') {
+  // [Joshen] For staff only to debug internal issues
+  LogRocket.init('bffopb/supabase-dashboard-staff')
+}
 
 loader.config({
   // [Joshen] Attempt for offline support/bypass ISP issues is to store the assets required for monaco
@@ -178,10 +188,18 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
                 <PageTelemetry>
                   <TooltipProvider>
                     <RouteValidationWrapper>
-                      <ThemeProvider>
+                      <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                      >
                         <CommandMenuWrapper>
                           <AppBannerWrapper>
-                            {getLayout(<Component {...pageProps} />)}
+                            <FeaturePreviewContextProvider>
+                              {getLayout(<Component {...pageProps} />)}
+                              <FeaturePreviewModal />
+                            </FeaturePreviewContextProvider>
                           </AppBannerWrapper>
                         </CommandMenuWrapper>
                       </ThemeProvider>

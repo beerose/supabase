@@ -8,7 +8,11 @@ import { format } from 'sql-formatter'
 import {
   AiIconAnimation,
   Button,
-  Dropdown,
+  cn,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   IconCheck,
   IconChevronDown,
   IconCornerDownLeft,
@@ -16,7 +20,6 @@ import {
   IconSettings,
   IconX,
   Input_Shadcn_,
-  cn,
 } from 'ui'
 
 import ConfirmModal from 'components/ui/Dialogs/ConfirmDialog'
@@ -38,18 +41,14 @@ import {
   useStore,
 } from 'hooks'
 import { IS_PLATFORM, OPT_IN_TAGS } from 'lib/constants'
-import { removeCommentsFromSql, uuidv4 } from 'lib/helpers'
+import { uuidv4 } from 'lib/helpers'
 import { useProfile } from 'lib/profile'
 import Telemetry from 'lib/telemetry'
 import { getSqlEditorStateSnapshot, useSqlEditorStateSnapshot } from 'state/sql-editor'
 import { subscriptionHasHipaaAddon } from '../BillingV2/Subscription/Subscription.utils'
 import AISchemaSuggestionPopover from './AISchemaSuggestionPopover'
 import AISettingsModal from './AISettingsModal'
-import {
-  destructiveSqlRegex,
-  sqlAiDisclaimerComment,
-  untitledSnippetTitle,
-} from './SQLEditor.constants'
+import { sqlAiDisclaimerComment, untitledSnippetTitle } from './SQLEditor.constants'
 import {
   ContentDiff,
   DiffType,
@@ -58,6 +57,7 @@ import {
   SQLEditorContextValues,
 } from './SQLEditor.types'
 import {
+  checkDestructiveQuery,
   createSqlSnippetSkeleton,
   getDiffTypeButtonLabel,
   getDiffTypeDropdownLabel,
@@ -260,9 +260,7 @@ const SQLEditor = () => {
           ? (selectedValue || editorRef.current?.getValue()) ?? snippet.snippet.content.sql
           : selectedValue || editorRef.current?.getValue()
 
-        const containsDestructiveOperations = destructiveSqlRegex.some((regex) =>
-          regex.test(removeCommentsFromSql(sql))
-        )
+        const containsDestructiveOperations = checkDestructiveQuery(sql)
 
         if (!force && containsDestructiveOperations) {
           setIsConfirmModalOpen(true)
@@ -704,38 +702,39 @@ const SQLEditor = () => {
                         >
                           {getDiffTypeButtonLabel(selectedDiffType)}
                         </Button>
-                        <Dropdown
-                          align="end"
-                          side="bottom"
-                          overlay={Object.values(DiffType)
-                            .filter((diffType) => diffType !== selectedDiffType)
-                            .map((diffType) => (
-                              <Dropdown.Item
-                                key={diffType}
-                                onClick={() => {
-                                  setSelectedDiffType(diffType)
-                                  switch (diffType) {
-                                    case DiffType.Modification:
-                                      return compareAsModification()
-                                    case DiffType.Addition:
-                                      return compareAsAddition()
-                                    case DiffType.NewSnippet:
-                                      return compareAsNewSnippet()
-                                    default:
-                                      throw new Error(`Unknown diff type '${diffType}'`)
-                                  }
-                                }}
-                              >
-                                {getDiffTypeDropdownLabel(diffType)}
-                              </Dropdown.Item>
-                            ))}
-                        >
-                          <Button
-                            type="primary"
-                            className="rounded-l-none border-l-0 px-[4px] py-[5px]"
-                            icon={<IconChevronDown />}
-                          />
-                        </Dropdown>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              type="primary"
+                              className="rounded-l-none border-l-0 px-[4px] py-[5px] flex"
+                              icon={<IconChevronDown />}
+                            />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" side="bottom">
+                            {Object.values(DiffType)
+                              .filter((diffType) => diffType !== selectedDiffType)
+                              .map((diffType) => (
+                                <DropdownMenuItem
+                                  key={diffType}
+                                  onClick={() => {
+                                    setSelectedDiffType(diffType)
+                                    switch (diffType) {
+                                      case DiffType.Modification:
+                                        return compareAsModification()
+                                      case DiffType.Addition:
+                                        return compareAsAddition()
+                                      case DiffType.NewSnippet:
+                                        return compareAsNewSnippet()
+                                      default:
+                                        throw new Error(`Unknown diff type '${diffType}'`)
+                                    }
+                                  }}
+                                >
+                                  <p>{getDiffTypeDropdownLabel(diffType)}</p>
+                                </DropdownMenuItem>
+                              ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       <Button
                         type="alternative"
